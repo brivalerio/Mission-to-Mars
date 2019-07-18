@@ -14,9 +14,10 @@ def index():
 
 @app.route("/scrape")
 def scrape():
+    db.collection.remove({})
     mars_data = mission_to_mars_scrape.scrape_all()
     mongo.db.collection.update({}, mars_data, upsert=True)
     return redirect("/")
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
