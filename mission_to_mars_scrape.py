@@ -31,7 +31,7 @@ def mars_news(browser):
         slide_elem.find('div', class_="content_title")
         news_title = slide_elem.find('div', class_="content_title").text
         news_p = slide_elem.find('div', class_="article_teaser_body").text
-    except: AttributeError:
+    except AttributeError:
         return None, None
         
     return news_title, news_p
@@ -52,3 +52,14 @@ def feature_image(browser):
         return None
     
     return img_url
+
+def mars_weather(browser):
+    url = "https://twitter.com/marswxreport?lang=en"
+    browser.visit(url)
+    html = browser.html
+    weather_soup = BeautifulSoup(html, "html.parser")
+    tweets = weather_soup.find_all('div', class_='js-tweet-text-container')
+    for tweet in tweets:
+        mars_weather = tweet.find('p').text
+    
+    return mars_weather
