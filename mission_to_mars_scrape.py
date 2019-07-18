@@ -37,5 +37,18 @@ def mars_news(browser):
     return news_title, news_p
 
 def feature_image(browser):
-
+    url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
+    browser.visit(url)
+    full_image_elem = browser.find_by_id('full_image')
+    full_image_elem.click()
+    more_info_elem = browser.find_link_by_partial_text("more info")
+    more_info_elem.click()
+    html = browser.html
+    img_soup = BeautifulSoup(html, 'html.parser')
+    try:
+        img_url_rel = img_soup.select_one('figure.lede a img').get("src")
+        img_url = f'https://www.jpl.nasa.gov{img_url_rel}'
+    except AttributeError:
+        return None
+    
     return img_url
