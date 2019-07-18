@@ -63,3 +63,32 @@ def mars_weather(browser):
         mars_weather = tweet.find('p').text
     
     return mars_weather
+
+def facts(browser):
+    url = 'https://space-facts.com/mars/'
+    mars_facts = pd.read_html(url)
+    mars_df = mars_facts[1]
+    mars_df.columns = ['Description','Value']
+    mars_df.set_index('Description', inplace=True)
+    mars_html = mars_df.to_html()
+
+    return facts
+
+def hemispheres(browser):
+    url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+    browser.visit(url)
+    hemi_html = browser.html
+    hemi_soup = BeautifulSoup(hemi_html, 'html.parser')
+    items = hemi_soup.find_all('div', class_='item')
+    images = []
+    main_url = 'https://astrogeology.usgs.gov'
+    for item in items:
+        title = item.find('h3').text
+        x_url = item.find('a', class_='itemLink product-item')['href']
+        browser.visit(main_url+x_url)
+        x_url = browser.html
+        x_soup = BeautifulSoup(x_url, 'html.parser')
+        img_url = main_url + x_soup.find('img', class_="wide-image")['src']      
+        images.append({"title":title, "img_url":img_url})
+
+    return images
